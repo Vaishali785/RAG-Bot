@@ -1,7 +1,8 @@
 import { Sparkles } from "lucide-react"
 import { cn } from "../../lib/utils"
+import Typing from "./Typing"
 
-const Message = ({ msg }) => {
+const Message = ({ msg, aiThinking }) => {
 	return (
 		<>
 			<div
@@ -16,16 +17,21 @@ const Message = ({ msg }) => {
 						<Sparkles className="w-3.5 h-3.5 text-white" />
 					</div>
 				)}
-				<div
-					className={cn(
-						"max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft",
-						msg.sender === "user"
-							? "bg-gradient-user text-white rounded-2xl rounded-br-md"
-							: "glass rounded-2xl rounded-bl-md",
-					)}
-				>
-					{msg.text}
-				</div>
+
+				{aiThinking && msg.text == "thinking" ? (
+					<Typing typing={aiThinking} />
+				) : (
+					<div
+						className={cn(
+							"max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft",
+							msg.sender === "user"
+								? "bg-gradient-user text-white rounded-2xl rounded-br-md"
+								: "glass rounded-2xl rounded-bl-md",
+						)}
+					>
+						{msg.text}
+					</div>
+				)}
 			</div>
 		</>
 	)
