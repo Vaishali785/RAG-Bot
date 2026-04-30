@@ -1,21 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import SendBtn from "./SendBtn"
 
-const Input = ({ setMsgs, setTyping, fetchAPI, result }) => {
+const Input = ({ sendMsg }) => {
 	const [input, setInput] = useState(" ")
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 
-	const handleTyping = (e) => {
-		setTyping(true)
-		setInput(e.target.value)
-	}
 	const handleSubmit = () => {
-		setTyping(false)
-		const newMsg = { id: crypto.randomUUID(), sender: "user", text: input }
-		const aiMsg = { id: crypto.randomUUID(), sender: "ai", text: "thinking" }
-		setMsgs((prev) => [...prev, newMsg, aiMsg])
+		sendMsg(input)
 		setInput("")
-		fetchAPI(input)
+
 		inputRef.current.style.height = "36px"
 	}
 	const handleEnter = (e) => {
@@ -23,28 +16,6 @@ const Input = ({ setMsgs, setTyping, fetchAPI, result }) => {
 			handleSubmit()
 		}
 	}
-
-	useEffect(() => {
-		if (result) {
-			// const newMsgs = msgs.map((msg) => {
-			// 	if (msg.sender === "ai" && msg.text == "thinking") {
-			// 		return { ...msgs, text: result }
-			// 	}
-			// })
-			setMsgs((msgs) => {
-				const index = msgs.findIndex((msg) => msg.sender === "ai" && msg.text == "thinking")
-
-				if (index === -1) return msgs
-
-				const updatedMsgs = [...msgs]
-				updatedMsgs[index] = {
-					...updatedMsgs[index],
-					text: result,
-				}
-				return updatedMsgs
-			})
-		}
-	}, [result, setMsgs])
 
 	useEffect(() => {
 		const inputText = inputRef.current
@@ -65,7 +36,7 @@ const Input = ({ setMsgs, setTyping, fetchAPI, result }) => {
 						value={input}
 						name="msgInput"
 						className="flex-1 w-full bg-transparent outline-none overflow-x-hidden placeholder:text-muted-foreground/60 py-2 resize-none h-9 text-sm"
-						onChange={(e) => handleTyping(e)}
+						onChange={(e) => setInput(e.target.value)}
 						onKeyDown={(e) => handleEnter(e)}
 						autoFocus
 						placeholder="Type your question here.."
