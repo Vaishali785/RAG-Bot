@@ -29,3 +29,11 @@ export type LocalConfig = {
 	theme?: Themes
 	palette?: PaletteOptions
 }
+
+export type Msg = {
+	id: string
+	sender: "user" | "ai"
+	content: string
+	status?: "loading" | "streaming" | "error" | "done"
+	errorMsg?: string
+}
