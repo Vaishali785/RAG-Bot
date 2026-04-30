@@ -1,43 +1,83 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import SendBtn from "./SendBtn"
 
-const Input = ({ setMsgs, setTyping }) => {
-	const [input, setInput] = useState("")
+const Input = ({ setMsgs, setTyping, fetchAPI, result }) => {
+	const [input, setInput] = useState(" ")
+	const inputRef = useRef<HTMLTextAreaElement>(null)
 
 	const handleTyping = (e) => {
 		setTyping(true)
 		setInput(e.target.value)
 	}
+	const handleSubmit = () => {
+		setTyping(false)
+		const newMsg = { id: crypto.randomUUID(), sender: "user", text: input }
+		const aiMsg = { id: crypto.randomUUID(), sender: "ai", text: "thinking" }
+		setMsgs((prev) => [...prev, newMsg, aiMsg])
+		setInput("")
+		fetchAPI(input)
+		inputRef.current.style.height = "36px"
+	}
 	const handleEnter = (e) => {
 		if (e.key === "Enter") {
-			setTyping(false)
-			const newMsg = { id: crypto.randomUUID(), sender: "user", text: input }
-			setMsgs((prev) => [...prev, newMsg])
-			setInput("")
+			handleSubmit()
 		}
 	}
 
+	useEffect(() => {
+		if (result) {
+			// const newMsgs = msgs.map((msg) => {
+			// 	if (msg.sender === "ai" && msg.text == "thinking") {
+			// 		return { ...msgs, text: result }
+			// 	}
+			// })
+			setMsgs((msgs) => {
+				const index = msgs.findIndex((msg) => msg.sender === "ai" && msg.text == "thinking")
+
+				if (index === -1) return msgs
+
+				const updatedMsgs = [...msgs]
+				updatedMsgs[index] = {
+					...updatedMsgs[index],
+					text: result,
+				}
+				return updatedMsgs
+			})
+		}
+	}, [result, setMsgs])
+
+	useEffect(() => {
+		const inputText = inputRef.current
+		inputRef.current.style.height = "36px"
+		if (input.trim() && inputText) {
+			// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
+			// Set height to scrollHeight to match current content
+			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
+			console.log(">>height", inputRef.current.style.height, input.trim())
+		}
+	}, [input])
 	return (
-		<div className="flex justify-center w-full items-end p-2">
-			<div className="w-3xl flex glass rounded-full pl-5 pr-2 py-2 shadow-soft ">
-				{/* <textarea
-                    rows={2}
-                    name="msgInput"
-                    className="flex-1 w-3xl bg-transparent outline-none text-sm placeholder:text-muted-foreground/60 py-2 glass rounded-full pl-5 pr-2 py-2 shadow-soft absolute bottom-4 mx-auto h-10 resize-auto"
-                    placeholder="Type your question here.."
-                >
-                    Input
-                </textarea> */}
-				<input
-					value={input}
-					onChange={(e) => handleTyping(e)}
-					onKeyDown={(e) => handleEnter(e)}
-					placeholder="Ask Aria anything..."
-					className="flex-1 w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/60 py-2 "
-					autoFocus
-				/>
-				<SendBtn send={handleEnter} input={input} />
+		<div className="relative w-full ">
+			<div className="flex justify-center w-full items-end p-2 mb-10">
+				<div className={`w-3xl flex glass rounded-3xl pl-5 pr-2 py-2 shadow-soft `}>
+					<textarea
+						rows={1}
+						ref={inputRef}
+						value={input}
+						name="msgInput"
+						className="flex-1 w-full bg-transparent outline-none overflow-x-hidden placeholder:text-muted-foreground/60 py-2 resize-none h-9 text-sm"
+						onChange={(e) => handleTyping(e)}
+						onKeyDown={(e) => handleEnter(e)}
+						autoFocus
+						placeholder="Type your question here.."
+					/>
+
+					<SendBtn send={handleSubmit} input={input} />
+				</div>
 			</div>
+			<p className="text-center text-[11px] text-muted-foreground mt-3 absolute left-1/2 bottom-5 -translate-x-1/2">
+				AI can make mistakes. Verify important info with our team.
+			</p>
 		</div>
 	)
 }
