@@ -53,7 +53,6 @@ const Input = ({ setMsgs, setTyping, fetchAPI, result }) => {
 			// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
 			// Set height to scrollHeight to match current content
 			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
-			console.log(">>height", inputRef.current.style.height, input.trim())
 		}
 	}, [input])
 	return (
