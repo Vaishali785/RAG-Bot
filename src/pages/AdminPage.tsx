@@ -11,9 +11,11 @@ const AdminPage = () => {
 		<main className="w-full z-20 py-10 h-full overflow-y-scroll">
 			<div className="mx-auto w-6xl">
 				<div className="mb-8 animate-fade-up ">
-					<div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs font-medium text-foreground/70 mb-4">
-						<Settings className="w-3 h-3" />
-						Admin console
+					<div className="flex gap-4">
+						<div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs font-medium text-foreground/70 mb-4">
+							<Settings className="w-3 h-3" />
+							Admin console
+						</div>
 					</div>
 					<h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
 						Train <span className="text-gradient">Aria</span>.
