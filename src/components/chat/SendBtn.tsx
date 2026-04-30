@@ -7,7 +7,7 @@ const SendBtn = ({ send, input }) => {
 			onClick={() => send()}
 			disabled={!input.trim()}
 			className={cn(
-				"w-10 h-10 rounded-full bg-gradient-button flex items-center justify-center text-white transition-all",
+				"w-9 h-9 rounded-full bg-gradient-button self-end flex items-center justify-center text-white transition-all",
 				"hover:scale-105 active:scale-95 shadow-soft",
 				!input.trim() && "opacity-50 cursor-not-allowed hover:scale-100",
 			)}
