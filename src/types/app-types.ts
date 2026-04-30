@@ -22,10 +22,10 @@ export type Palette = {
 }
 
 export type PaletteOptions = "lavender" | "ocean" | "sunset" | "forest" | "midnight" | "rose"
-
+export type Themes = "light" | "dark"
 export type TabSlug = "knowledge" | "appearance"
 
 export type LocalConfig = {
-	theme?: "light" | "dark"
+	theme?: Themes
 	palette?: PaletteOptions
 }
