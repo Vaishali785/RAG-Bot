@@ -3,11 +3,10 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { ThemeToggle } from "../ThemeToggle"
 
-type Pages = "chat" | "admin"
+type Pages = "/" | "/admin"
 const Header = () => {
 	const { pathname } = useLocation()
-	const currentPage = pathname.split("/")[1] === "" ? "chat" : "admin"
-	const [activePage, setActivePage] = useState<Pages>(currentPage ?? "chat")
+	const [activePage, setActivePage] = useState<Pages>((pathname as Pages) ?? "/")
 	return (
 		<header className="relative z-10 px-8 py-6 w-full shadow-header">
 			<div className=" mx-auto flex justify-between items-center">
@@ -19,12 +18,12 @@ const Header = () => {
 				</Link>
 
 				<div className="flex items-center gap-2">
-					{activePage == "chat" ? (
+					{activePage == "/" ? (
 						<Link
 							to="/admin"
 							className="w-10 h-10 rounded-full glass hover:bg-white/80 dark:hover:bg-white/10 flex items-center justify-center transition-colors"
 							aria-label="Admin"
-							onClick={() => setActivePage("admin")}
+							onClick={() => setActivePage("/admin")}
 						>
 							<Settings className="w-4 h-4" />
 						</Link>
@@ -33,7 +32,7 @@ const Header = () => {
 							to="/"
 							className="w-10 h-10 rounded-full glass hover:bg-white/80 dark:hover:bg-white/10 flex items-center justify-center transition-colors"
 							aria-label="Admin"
-							onClick={() => setActivePage("chat")}
+							onClick={() => setActivePage("/")}
 						>
 							<MessageCircle className="w-4 h-4" />
 						</Link>
