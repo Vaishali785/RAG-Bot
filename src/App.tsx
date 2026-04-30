@@ -6,15 +6,22 @@ import { applyPalette, getLocalConfig, storeLocalConfig } from "./lib/helper"
 import AdminPage from "./pages/AdminPage"
 import HomePage from "./pages/HomePage"
 import Layout from "./pages/Layout"
+import type { Themes } from "./types/app-types"
 
 function App() {
+	// const { theme } = useContext(ThemeContext)
 	useEffect(() => {
-		const theme = getLocalConfig("theme")
+		const theme = getLocalConfig("theme") as Themes
 		const palette = getLocalConfig("palette")
 		if (!theme || !palette) {
 			storeLocalConfig({ theme: "light", palette: "lavender" })
 		} else {
-			applyPalette(palettes.find((p) => p.id == palette))
+			document.documentElement.classList.add(theme === "dark" ? "dark" : "light")
+			storeLocalConfig({ theme: theme })
+			applyPalette(
+				palettes.find((p) => p.id == palette),
+				theme,
+			)
 		}
 	}, [])
 	return (
