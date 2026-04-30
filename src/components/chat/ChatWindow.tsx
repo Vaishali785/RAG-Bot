@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
-import Message from "./Message"
+import { AIMessage, UserMessage } from "./Message"
 
-const ChatWindow = ({ messages, typing, aiThinking }) => {
+const ChatWindow = ({ messages, typing }) => {
 	const scrollRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -10,10 +10,9 @@ const ChatWindow = ({ messages, typing, aiThinking }) => {
 	return (
 		<div ref={scrollRef} className="overflow-y-scroll w-full h-full">
 			<div className="h-full w-3xl flex-1 z-2 p-8 pb-2 mx-auto">
-				{messages?.map((msg) => (
-					<Message msg={msg} key={msg.id} aiThinking={aiThinking} />
-				))}
-				{/* <Typing typing={typing} /> */}
+				{messages?.map((msg) =>
+					msg.sender === "user" ? <UserMessage msg={msg} /> : <AIMessage msg={msg} />,
+				)}
 			</div>
 		</div>
 	)
