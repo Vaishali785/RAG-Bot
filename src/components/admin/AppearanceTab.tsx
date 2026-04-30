@@ -3,7 +3,7 @@ import { useState } from "react"
 import { palettes } from "../../constants/data"
 import { applyPalette, getLocalConfig, storeLocalConfig } from "../../lib/helper"
 import { cn } from "../../lib/utils"
-import type { PaletteOptions, TabSlug } from "../../types/app-types"
+import type { PaletteOptions, TabSlug, Themes } from "../../types/app-types"
 
 const AppearanceTab = ({ activeTab }: { activeTab: TabSlug }) => {
 	const palette: PaletteOptions = (getLocalConfig("palette") ?? "lavender") as PaletteOptions
@@ -26,7 +26,7 @@ const AppearanceTab = ({ activeTab }: { activeTab: TabSlug }) => {
 									key={p.id}
 									onClick={() => {
 										setPaletteId(p.id)
-										applyPalette(p)
+										applyPalette(p, getLocalConfig("theme") as Themes)
 										storeLocalConfig({ palette: p.id })
 									}}
 									className={cn(
