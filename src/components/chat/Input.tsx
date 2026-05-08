@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from "react"
 import SendBtn from "./SendBtn"
 
-const Input = ({ sendMsg }) => {
+const Input = ({ sendMsg, lastMsg }) => {
 	const [input, setInput] = useState(" ")
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 
+	const aiMsgLoading = lastMsg?.status === "loading"
+
 	const handleSubmit = () => {
-		sendMsg(input)
+		sendMsg({ query: input })
 		setInput("")
+		inputRef.current.scrollTop = 0
 
 		inputRef.current.style.height = "36px"
 	}
 	const handleEnter = (e) => {
-		if (e.key === "Enter") {
+		if (e.key === "Enter" && !aiMsgLoading) {
+			e.preventDefault() // without this empty line gets inserted in textarea after enter
 			handleSubmit()
 		}
 	}
@@ -42,7 +46,7 @@ const Input = ({ sendMsg }) => {
 						placeholder="Type your question here.."
 					/>
 
-					<SendBtn send={handleSubmit} input={input} />
+					<SendBtn send={handleSubmit} input={input} aiMsgLoading={aiMsgLoading} />
 				</div>
 			</div>
 			<p className="text-center text-[11px] text-muted-foreground mt-3 absolute left-1/2 bottom-5 -translate-x-1/2">
