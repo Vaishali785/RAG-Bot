@@ -120,7 +120,9 @@ const KnowledgeTab = () => {
 							className="hidden"
 							onChange={(e: ChangeEvent<HTMLInputElement>) => {
 								e.preventDefault()
-								handleFileUpload(e.target.files)
+								const files = e.target.files
+								if (!files) return
+								handleFileUpload(files)
 							}}
 						/>
 					)}

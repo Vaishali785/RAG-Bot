@@ -64,7 +64,7 @@ export type MsgAction =
 	| {
 			type: "FINISH_AI_MSG"
 			id: string
-			msg: Msg
+			msg: string
 	  }
 	| {
 			type: "ERROR_AI_MSG"
