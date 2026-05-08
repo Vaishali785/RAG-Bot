@@ -39,7 +39,7 @@ export type Msg = {
 	type?: "greeting" | "message"
 }
 
-export type Status = "none" | "loading" | "success" | "fail"
+export type Status = "none" | "loading" | "success" | "fail" | "file"
 
 export type SendMsgProps = {
 	query: string

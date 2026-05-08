@@ -30,7 +30,12 @@ const KnowledgeTab = () => {
 	const onDrop = (e: DragEvent) => {
 		e.preventDefault()
 		setDragOver(false)
-		handleFileUpload(e.dataTransfer.files)
+		const file = e.dataTransfer.files
+		if (file[0].type.startsWith("application/pdf")) {
+			handleFileUpload(file)
+		} else {
+			setStatus("file")
+		}
 	}
 
 	const statusIcon = (status: Status) => {
@@ -51,12 +56,18 @@ const KnowledgeTab = () => {
 				return {
 					icon: <CircleX className="w-5 h-5 " />,
 					mainText: "Upload Failed",
-					subText: "Something went wrong",
+					subText: "Something went wrong! Please make sure the file is a PDF.",
+				}
+			case "file":
+				return {
+					icon: <CircleX className="w-5 h-5 " />,
+					mainText: "Upload Failed",
+					subText: "Please make sure the file is a PDF.",
 				}
 			default:
 				return {
 					icon: <Upload className="w-5 h-5 text-white" />,
-					mainText: "Upload File",
+					mainText: "Upload File (.pdf)",
 					subText: "Select a file to upload",
 				}
 		}
@@ -116,7 +127,7 @@ const KnowledgeTab = () => {
 							ref={fileRef}
 							type="file"
 							multiple
-							accept=".pdf,.md,.txt,.docx"
+							accept=".pdf"
 							className="hidden"
 							onChange={(e: ChangeEvent<HTMLInputElement>) => {
 								e.preventDefault()

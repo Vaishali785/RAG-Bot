@@ -26,7 +26,7 @@ const HomePage = () => {
 						Give your AI something to <span className="text-gradient">work with.</span>
 					</h1>
 					<p className="text-muted-foreground mt-2 max-w-xl">
-						Upload a doc and your agent instantly knows what to say — no setup, no training runs.
+						Upload a PDF and your agent instantly knows what to say — no setup, no training runs.
 					</p>
 				</div>
 
@@ -34,8 +34,7 @@ const HomePage = () => {
 
 				<p className="glass rounded-3xl p-6 shadow-soft my-4">
 					<strong>👋 How it works — </strong>
-					upload a file above and I'll read through it. Then just ask me anything and I'll answer
-					based on exactly what's in your document.
+					upload a .pdf file above and I'll read through it. Then just ask me anything and I'll answer based on exactly what's in your document.
 				</p>
 			</div>
 		)
