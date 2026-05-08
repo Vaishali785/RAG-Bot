@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef } from "react"
 import { CHAT_API } from "../constants/queries"
 import type { Msg, MsgAction, SendMsgProps } from "../types/app-types"
 
-function msgReducer(msgs: Msg[], action: MsgAction) {
+function msgReducer(msgs: Msg[], action: MsgAction): Msg[] {
 	switch (action.type) {
 		case "ADD_USER_MSG":
 			return [...msgs, action.payload]
