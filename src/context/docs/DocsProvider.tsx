@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import useChat from "../../hooks/useChat"
 import { DOCS_API, REMOVE_DOC_API, UPDATE_DOC_API } from "../../lib/queries"
+import type { Status } from "../../types/app-types"
 import { DocsContext } from "./DocsContext"
 
 type RequestProps<T> = {
@@ -10,7 +11,6 @@ type RequestProps<T> = {
 	headers?: HeadersInit
 	onSuccess?: (data?: T) => void
 }
-type Status = "none" | "loading" | "success" | "fail"
 
 const DocsProvider = ({ children }) => {
 	const [docsList, setDocsList] = useState([])
