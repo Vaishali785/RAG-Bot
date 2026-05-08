@@ -39,8 +39,10 @@ const getInitialMsgs = () => {
 		const storedMsgs = sessionStorage.getItem(STORAGE_KEY)
 		return storedMsgs ? JSON.parse(storedMsgs) : []
 	} catch (error) {
-		console.log("error", error)
-		return []
+		if (error instanceof Error) {
+			console.log("error", error)
+			return []
+		}
 	}
 }
 
@@ -86,12 +88,14 @@ const useChat = () => {
 				msg: msg,
 			})
 		} catch (error) {
-			console.log("error", error)
-			dispatch({
-				type: "ERROR_AI_MSG",
-				id: msgId,
-				errorMsg: error.message,
-			})
+			if (error instanceof Error) {
+				console.log("error", error)
+				dispatch({
+					type: "ERROR_AI_MSG",
+					id: msgId,
+					errorMsg: error.message,
+				})
+			}
 			// setError(error.message)
 		}
 	}

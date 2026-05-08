@@ -20,8 +20,10 @@ const KnowledgeTab = () => {
 
 			setStatus("success")
 		} catch (err) {
-			console.log("err", err)
-			setStatus("fail")
+			if (err instanceof Error) {
+				console.log("err", err)
+				setStatus("fail")
+			}
 		}
 	}
 

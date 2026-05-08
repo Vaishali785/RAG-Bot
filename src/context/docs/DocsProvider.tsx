@@ -105,7 +105,13 @@ const DocsProvider = ({ children }) => {
 }
 
 export const useDocs = () => {
-	return useContext(DocsContext)
+	const context = useContext(DocsContext)
+
+	if (!context) {
+		throw new Error("useDocs must be used inside DocsProvider")
+	}
+
+	return context
 }
 
 export default DocsProvider

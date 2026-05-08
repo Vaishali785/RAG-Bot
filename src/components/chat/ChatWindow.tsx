@@ -1,11 +1,17 @@
 import { useEffect, useRef } from "react"
+import type { Msg } from "../../types/app-types"
 import { AIMessage, UserMessage } from "./Message"
 
-const ChatWindow = ({ messages, typing }) => {
+type Props = {
+	messages: Msg[]
+	typing: boolean
+}
+
+const ChatWindow = ({ messages, typing }: Props) => {
 	const scrollRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
-		scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
+		scrollRef.current?.scrollTo({ top: scrollRef.current?.scrollHeight, behavior: "smooth" })
 	}, [messages, typing])
 	return (
 		<div ref={scrollRef} className="overflow-y-scroll w-full h-full">

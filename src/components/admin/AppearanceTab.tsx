@@ -3,7 +3,7 @@ import { useState } from "react"
 import { palettes } from "../../constants/data"
 import { applyPalette, getLocalConfig, storeLocalConfig } from "../../lib/helper"
 import { cn } from "../../lib/utils"
-import type { PaletteOptions, TabSlug, Themes } from "../../types/app-types"
+import type { PaletteOptions, Palette as PaletteType, TabSlug, Themes } from "../../types/app-types"
 
 const AppearanceTab = ({ activeTab }: { activeTab: TabSlug }) => {
 	const palette: PaletteOptions = (getLocalConfig("palette") ?? "lavender") as PaletteOptions
@@ -21,7 +21,7 @@ const AppearanceTab = ({ activeTab }: { activeTab: TabSlug }) => {
 							Each palette has matched light & dark variants — switches with your theme.
 						</p>
 						<div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-							{palettes.map((p) => (
+							{palettes.map((p: PaletteType) => (
 								<button
 									key={p.id}
 									onClick={() => {
@@ -35,7 +35,7 @@ const AppearanceTab = ({ activeTab }: { activeTab: TabSlug }) => {
 									)}
 								>
 									<div className="flex gap-1.5 mb-3">
-										{p.swatches.map((c, i) => (
+										{p.swatches.map((c: string, i: number) => (
 											<span
 												key={i}
 												className="w-7 h-7 rounded-lg shadow-soft"

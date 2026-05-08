@@ -10,8 +10,9 @@ const Input = ({ sendMsg, lastMsg }) => {
 	const handleSubmit = () => {
 		sendMsg({ query: input })
 		setInput("")
-		inputRef.current.scrollTop = 0
+		if (!inputRef.current) return
 
+		inputRef.current.scrollTop = 0
 		inputRef.current.style.height = "36px"
 	}
 	const handleEnter = (e) => {
@@ -23,11 +24,13 @@ const Input = ({ sendMsg, lastMsg }) => {
 
 	useEffect(() => {
 		const inputText = inputRef.current
-		inputRef.current.style.height = "36px"
-		if (input.trim() && inputText) {
-			// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
-			// Set height to scrollHeight to match current content
-			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
+		if (inputText) {
+			inputRef.current.style.height = "36px"
+			if (input.trim()) {
+				// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
+				// Set height to scrollHeight to match current content
+				inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
+			}
 		}
 	}, [input])
 	return (

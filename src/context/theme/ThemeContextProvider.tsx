@@ -15,6 +15,7 @@ export function ThemeContextProvider({ children }) {
 
 		const p: PaletteOptions = getLocalConfig("palette") as PaletteOptions
 		const palette = palettes.find((palette) => palette.id == p)
+		if (!palette) return
 		applyPalette(palette, updatedTheme)
 	}
 

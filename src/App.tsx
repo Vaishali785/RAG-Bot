@@ -17,10 +17,11 @@ function App() {
 		} else {
 			document.documentElement.classList.add(theme === "dark" ? "dark" : "light")
 			storeLocalConfig({ theme: theme })
-			applyPalette(
-				palettes.find((p) => p.id == palette),
-				theme,
-			)
+			const selectedPalette = palettes.find((p) => p.id === palette)
+
+			if (!selectedPalette) return
+
+			applyPalette(selectedPalette, theme)
 		}
 	}, [])
 	return (

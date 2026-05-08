@@ -1,6 +1,7 @@
 import { CheckCircle2, FileText, Trash2 } from "lucide-react"
 import { useEffect } from "react"
 import { useDocs } from "../../context/docs/DocsProvider"
+import type { Doc } from "../../types/app-types"
 import Loader from "../Loader"
 
 const DocumentList = () => {
@@ -28,7 +29,7 @@ const DocumentList = () => {
 			<p className="text-xs font-medium text-muted-foreground px-1">
 				{docsList?.length} document{docsList?.length !== 1 && "s"} indexed
 			</p>
-			{docsList?.map((doc, index) => (
+			{docsList?.map((doc: Doc, index: number) => (
 				<div
 					key={index}
 					className="flex items-center gap-3 px-4 py-3 rounded-xl glass hover:bg-white/60 dark:hover:bg-white/5 transition-colors group animate-message-in"

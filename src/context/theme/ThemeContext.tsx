@@ -1,3 +1,9 @@
 import { createContext } from "react"
+import type { Themes } from "../../types/app-types"
 
-export const ThemeContext = createContext(undefined)
+type ThemeContextType = {
+	theme: Themes
+	toggleTheme: () => void
+}
+
+export const ThemeContext = createContext<ThemeContextType | null>(undefined)
