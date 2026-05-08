@@ -32,8 +32,11 @@ export type LocalConfig = {
 
 export type Msg = {
 	id: string
-	sender: "user" | "ai"
+	sender: "user" | "assistant"
 	content: string
 	status?: "loading" | "streaming" | "error" | "done"
 	errorMsg?: string
+	type?: "greeting" | "chat"
 }
+
+export type Status = "none" | "loading" | "success" | "fail"
