@@ -9,7 +9,6 @@ import Layout from "./pages/Layout"
 import type { Themes } from "./types/app-types"
 
 function App() {
-	// const { theme } = useContext(ThemeContext)
 	useEffect(() => {
 		const theme = getLocalConfig("theme") as Themes
 		const palette = getLocalConfig("palette")
