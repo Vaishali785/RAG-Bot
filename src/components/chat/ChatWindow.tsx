@@ -11,7 +11,11 @@ const ChatWindow = ({ messages, typing }) => {
 		<div ref={scrollRef} className="overflow-y-scroll w-full h-full">
 			<div className="h-full w-3xl flex-1 z-2 p-8 pb-2 mx-auto">
 				{messages?.map((msg) =>
-					msg.sender === "user" ? <UserMessage msg={msg} /> : <AIMessage msg={msg} />,
+					msg.sender === "user" ? (
+						<UserMessage msg={msg} key={msg.id} />
+					) : (
+						<AIMessage msg={msg} key={msg.id} />
+					),
 				)}
 			</div>
 		</div>
