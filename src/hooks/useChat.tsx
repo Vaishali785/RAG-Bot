@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from "react"
-import { CHAT_API } from "../lib/queries"
+import { CHAT_API } from "../constants/queries"
 
 function msgReducer(msgs, action) {
 	switch (action.type) {

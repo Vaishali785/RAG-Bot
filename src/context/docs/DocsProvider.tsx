@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
+import { DOCS_API, REMOVE_DOC_API, UPDATE_DOC_API } from "../../constants/queries"
 import useChat from "../../hooks/useChat"
-import { DOCS_API, REMOVE_DOC_API, UPDATE_DOC_API } from "../../lib/queries"
 import type { Status } from "../../types/app-types"
 import { DocsContext } from "./DocsContext"
 
