@@ -16,7 +16,7 @@ export const ThemeToggle = () => {
 			aria-label="Toggle theme"
 			className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-(image:--gradient-button)! hover:text-white cursor-pointer dark:hover:bg-white/10 transition-all"
 		>
-			{theme ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+			{theme == "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
 		</button>
 	)
 }
