@@ -1,5 +1,5 @@
-import { useReducer } from "react"
-import type { Msg } from "../types/app-types"
+import { useEffect, useReducer, useRef } from "react"
+import { CHAT_API } from "../lib/queries"
 
 function msgReducer(msgs, action) {
 	switch (action.type) {
@@ -17,49 +17,73 @@ function msgReducer(msgs, action) {
 					: msg,
 			)
 		case "FINISH_AI_MSG":
-			return msgs.map((msg) => (msg.id === action.id ? { ...msg, status: "done" } : msg))
+			return msgs.map((msg) =>
+				msg.id === action.id ? { ...msg, content: action.msg, status: "done" } : msg,
+			)
 		case "ERROR_AI_MSG":
 			return msgs.map((msg) =>
 				msg.id === action.id ? { ...msg, status: "error", errorMsg: action.errorMsg } : msg,
 			)
+		case "CLEAR_MSGS":
+			return []
 		default:
 			return msgs
 	}
 }
 
-const initialMsgs: Msg[] = []
+// const initialMsgs: Msg[] = []
+const STORAGE_KEY = "chat_msgs"
+
+const getInitialMsgs = () => {
+	try {
+		const storedMsgs = sessionStorage.getItem(STORAGE_KEY)
+		return storedMsgs ? JSON.parse(storedMsgs) : []
+	} catch (error) {
+		console.log("error", error)
+		return []
+	}
+}
 
 const useChat = () => {
-	const [msgs, dispatch] = useReducer(msgReducer, initialMsgs)
+	const [msgs, dispatch] = useReducer(msgReducer, [], getInitialMsgs)
+	const hasInitialized = useRef(false)
 
-	const streamResponse = async (query, msgId) => {
+	useEffect(() => {
+		sessionStorage.setItem(STORAGE_KEY, JSON.stringify(msgs))
+	}, [msgs])
+
+	const streamResponse = async (query, msgId, filteredMsgs) => {
 		try {
-			const response = await fetch("http://localhost:8000/chat", {
+			const response = await fetch(CHAT_API, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ question: query }),
+				body: JSON.stringify({ question: query, msgs: filteredMsgs }),
 			})
-			const reader = response.body.getReader()
-			const decoder = new TextDecoder()
+			const msg = await response.json()
+			// const reader = response.body.getReader()
+			// const decoder = new TextDecoder()
 
-			while (true) {
-				const { done, value } = await reader.read()
-				if (done) break
+			// console.log(">>>>inside stream ")
+			// while (true) {
+			// 	const { done, value } = await reader.read()
+			// 	if (done) break
 
-				const decodedValue = decoder.decode(value)
-				const chunk = JSON.parse(decodedValue)
-				dispatch({
-					type: "UPDATE_AI_MSG",
-					id: msgId,
-					chunk,
-				})
-			}
+			// 	const decodedValue = decoder.decode(value)
+			// 	const chunk = JSON.parse(decodedValue)
+			// 	console.log(">>>>inside stream 2", chunk)
+			// 	dispatch({
+			// 		type: "UPDATE_AI_MSG",
+			// 		id: msgId,
+			// 		chunk,
+			// 	})
+			// }
 
 			dispatch({
 				type: "FINISH_AI_MSG",
 				id: msgId,
+				msg: msg,
 			})
 		} catch (error) {
 			console.log("error", error)
@@ -72,33 +96,61 @@ const useChat = () => {
 		}
 	}
 
-	const sendMsg = async (query) => {
+	const sendMsg = async ({ query, type = "message", status = "loading" }) => {
 		const userMsgId = crypto.randomUUID()
 		const aiMsgId = crypto.randomUUID()
-		dispatch({
-			type: "ADD_USER_MSG",
-			payload: {
-				id: userMsgId,
-				content: query,
-				sender: "user",
-				// status: "done",
-			},
-		})
+
+		const userMsg = {
+			id: userMsgId,
+			content: query,
+			sender: "user",
+			type,
+		}
+
+		const updatedMsgs = type === "message" ? [...msgs, userMsg] : msgs
+
+		if (type == "message") {
+			dispatch({
+				type: "ADD_USER_MSG",
+				payload: userMsg,
+			})
+		}
 
 		dispatch({
 			type: "START_AI_MSG",
 			payload: {
 				id: aiMsgId,
 				content: "",
-				sender: "ai",
-				status: "loading",
+				sender: "assistant",
+				status,
+				type,
 			},
 		})
 
-		streamResponse(query, aiMsgId)
+		const filteredMsgs = updatedMsgs.filter((msg) => msg.type !== "greeting")
+
+		await streamResponse(query, aiMsgId, filteredMsgs)
 	}
 
-	return { msgs, sendMsg }
+	const initGreeting = () => {
+		if (hasInitialized.current) return
+
+		hasInitialized.current = true
+
+		sendMsg({
+			query: "greetings",
+			type: "greeting",
+		})
+	}
+
+	const clearChat = () => {
+		sessionStorage.removeItem("chat_msgs")
+
+		dispatch({
+			type: "CLEAR_MSGS",
+		})
+	}
+	return { sendMsg, msgs, initGreeting, clearChat }
 }
 
 export default useChat
