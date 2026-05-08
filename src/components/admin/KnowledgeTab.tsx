@@ -12,7 +12,7 @@ const KnowledgeTab = () => {
 
 	const fileRef = useRef<HTMLInputElement>(null)
 
-	const handleFileUpload = async (files) => {
+	const handleFileUpload = async (files: FileList) => {
 		const file = files[0]
 		setStatus("loading")
 		try {

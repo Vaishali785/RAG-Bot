@@ -9,7 +9,7 @@ type RequestProps<T> = {
 	method: "GET" | "POST"
 	body?: BodyInit | null
 	headers?: HeadersInit
-	onSuccess?: (data?: T) => void
+	onSuccess?: (data: T) => void
 }
 
 const DocsProvider = ({ children }: { children: React.ReactNode }) => {
@@ -46,8 +46,8 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 			if (error instanceof Error) {
 				setStatus("fail")
 				setError(error.message)
-				throw error
 			}
+			throw error
 		} finally {
 			setStatus("none")
 		}

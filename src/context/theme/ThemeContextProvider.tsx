@@ -1,10 +1,10 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { palettes } from "../../constants/data"
 import { applyPalette, getLocalConfig, storeLocalConfig } from "../../lib/helper"
 import type { PaletteOptions, Themes } from "../../types/app-types"
 import { ThemeContext } from "./ThemeContext"
 
-export function ThemeContextProvider({ children }) {
+export function ThemeContextProvider({ children }: { children: React.ReactNode }) {
 	const defaultTheme = getLocalConfig("theme") as Themes
 	const [theme, setTheme] = useState<Themes>(defaultTheme)
 

@@ -4,7 +4,7 @@ import SendBtn from "./SendBtn"
 
 type Props = {
 	sendMsg: (data: SendMsgProps) => Promise<void>
-	lastMsg: Msg
+	lastMsg?: Msg // when msgs=[], lastMsg = undefined
 }
 
 const Input = ({ sendMsg, lastMsg }: Props) => {
@@ -29,14 +29,13 @@ const Input = ({ sendMsg, lastMsg }: Props) => {
 	}
 
 	useEffect(() => {
-		const inputText = inputRef.current
-		if (!inputText) return
+		if (!inputRef.current) return
 
 		inputRef.current.style.height = "36px"
 		if (input.trim()) {
 			// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
 			// Set height to scrollHeight to match current content
-			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
+			inputRef.current.style.height = `${inputRef.current?.scrollHeight}px`
 		}
 	}, [input])
 	return (

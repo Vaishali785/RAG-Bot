@@ -7,7 +7,7 @@ import Loader from "../Loader"
 const DocumentList = () => {
 	const { error, status, docsList, deleteDocsList, fetchDocsList } = useDocs()
 
-	const handleDelete = async (name) => {
+	const handleDelete = async (name: string) => {
 		deleteDocsList(name)
 	}
 	useEffect(() => {

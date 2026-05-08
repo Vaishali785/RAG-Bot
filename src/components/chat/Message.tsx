@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils"
 import type { Msg } from "../../types/app-types"
 import Typing from "./Typing"
 
-export const UserMessage = ({ msg }) => {
+export const UserMessage = ({ msg }: { msg: Msg }) => {
 	return (
 		<div key={msg.id} className={cn("flex gap-3 animate-message-in my-3 justify-end")}>
 			<div
