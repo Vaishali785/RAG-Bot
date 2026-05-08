@@ -1,7 +1,13 @@
 import { Send } from "lucide-react"
 import { cn } from "../../lib/utils"
 
-const SendBtn = ({ send, input, aiMsgLoading }) => {
+type Props = {
+	send: () => void
+	input: string
+	aiMsgLoading: boolean
+}
+
+const SendBtn = ({ send, input, aiMsgLoading }: Props) => {
 	return (
 		<button
 			onClick={() => {

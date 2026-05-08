@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react"
+import type { Msg, SendMsgProps } from "../../types/app-types"
 import SendBtn from "./SendBtn"
 
-const Input = ({ sendMsg, lastMsg }) => {
+type Props = {
+	sendMsg: (data: SendMsgProps) => Promise<void>
+	lastMsg: Msg
+}
+
+const Input = ({ sendMsg, lastMsg }: Props) => {
 	const [input, setInput] = useState(" ")
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -15,7 +21,7 @@ const Input = ({ sendMsg, lastMsg }) => {
 		inputRef.current.scrollTop = 0
 		inputRef.current.style.height = "36px"
 	}
-	const handleEnter = (e) => {
+	const handleEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter" && !aiMsgLoading) {
 			e.preventDefault() // without this empty line gets inserted in textarea after enter
 			handleSubmit()
@@ -24,13 +30,13 @@ const Input = ({ sendMsg, lastMsg }) => {
 
 	useEffect(() => {
 		const inputText = inputRef.current
-		if (inputText) {
-			inputRef.current.style.height = "36px"
-			if (input.trim()) {
-				// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
-				// Set height to scrollHeight to match current content
-				inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
-			}
+		if (!inputText) return
+
+		inputRef.current.style.height = "36px"
+		if (input.trim()) {
+			// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
+			// Set height to scrollHeight to match current content
+			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
 		}
 	}, [input])
 	return (

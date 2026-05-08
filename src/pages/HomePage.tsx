@@ -41,7 +41,7 @@ const HomePage = () => {
 		)
 	return (
 		<>
-			<ChatWindow messages={msgs} typing="" />
+			<ChatWindow messages={msgs} />
 			<Input sendMsg={sendMsg} lastMsg={msgs.at(-1)} />
 		</>
 	)

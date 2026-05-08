@@ -3,8 +3,13 @@ import { useContext } from "react"
 import { ThemeContext } from "../context/theme/ThemeContext"
 
 export const ThemeToggle = () => {
-	const { theme, toggleTheme } = useContext(ThemeContext)
+	const themeContext = useContext(ThemeContext)
 
+	if (!themeContext) {
+		return null
+	}
+
+	const { theme, toggleTheme } = themeContext
 	return (
 		<button
 			onClick={toggleTheme}

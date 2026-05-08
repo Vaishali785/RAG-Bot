@@ -6,4 +6,4 @@ type ThemeContextType = {
 	toggleTheme: () => void
 }
 
-export const ThemeContext = createContext<ThemeContextType | null>(undefined)
+export const ThemeContext = createContext<ThemeContextType | null>(null)

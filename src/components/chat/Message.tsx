@@ -1,6 +1,7 @@
 import { CircleAlert, Sparkles } from "lucide-react"
 import Markdown from "react-markdown"
 import { cn } from "../../lib/utils"
+import type { Msg } from "../../types/app-types"
 import Typing from "./Typing"
 
 export const UserMessage = ({ msg }) => {
@@ -17,7 +18,7 @@ export const UserMessage = ({ msg }) => {
 	)
 }
 
-export const Greetings = ({ msg }) => {
+export const Greetings = ({ msg }: { msg: Msg }) => {
 	return (
 		<div
 			className={cn(
@@ -30,7 +31,7 @@ export const Greetings = ({ msg }) => {
 	)
 }
 
-export const AIMessage = ({ msg }) => {
+export const AIMessage = ({ msg }: { msg: Msg }) => {
 	return (
 		<div key={msg.id} className={cn("flex gap-3 animate-message-in my-3 justify-start")}>
 			<div className="w-8 h-8 rounded-full bg-gradient-button flex items-center justify-center shrink-0 shadow-soft">

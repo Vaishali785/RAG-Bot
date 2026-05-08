@@ -1,7 +1,8 @@
 import { useEffect, useReducer, useRef } from "react"
 import { CHAT_API } from "../constants/queries"
+import type { Msg, MsgAction, SendMsgProps } from "../types/app-types"
 
-function msgReducer(msgs, action) {
+function msgReducer(msgs: Msg[], action: MsgAction) {
 	switch (action.type) {
 		case "ADD_USER_MSG":
 			return [...msgs, action.payload]
@@ -54,7 +55,7 @@ const useChat = () => {
 		sessionStorage.setItem(STORAGE_KEY, JSON.stringify(msgs))
 	}, [msgs])
 
-	const streamResponse = async (query, msgId, filteredMsgs) => {
+	const streamResponse = async (query: string, msgId: string, filteredMsgs: Msg[]) => {
 		try {
 			const response = await fetch(CHAT_API, {
 				method: "POST",
@@ -100,11 +101,11 @@ const useChat = () => {
 		}
 	}
 
-	const sendMsg = async ({ query, type = "message", status = "loading" }) => {
+	const sendMsg = async ({ query, type = "message", status = "loading" }: SendMsgProps) => {
 		const userMsgId = crypto.randomUUID()
 		const aiMsgId = crypto.randomUUID()
 
-		const userMsg = {
+		const userMsg: Msg = {
 			id: userMsgId,
 			content: query,
 			sender: "user",

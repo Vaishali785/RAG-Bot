@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { DOCS_API, REMOVE_DOC_API, UPDATE_DOC_API } from "../../constants/queries"
 import useChat from "../../hooks/useChat"
-import type { Status } from "../../types/app-types"
+import type { Doc, Status } from "../../types/app-types"
 import { DocsContext } from "./DocsContext"
 
 type RequestProps<T> = {
@@ -12,8 +12,8 @@ type RequestProps<T> = {
 	onSuccess?: (data?: T) => void
 }
 
-const DocsProvider = ({ children }) => {
-	const [docsList, setDocsList] = useState([])
+const DocsProvider = ({ children }: { children: React.ReactNode }) => {
+	const [docsList, setDocsList] = useState<Doc[]>([])
 	const [error, setError] = useState("")
 	const [status, setStatus] = useState<Status>("none")
 	const { clearChat } = useChat()
@@ -43,9 +43,11 @@ const DocsProvider = ({ children }) => {
 			onSuccess?.(data)
 			return data
 		} catch (error) {
-			setStatus("fail")
-			setError(error.message)
-			throw error
+			if (error instanceof Error) {
+				setStatus("fail")
+				setError(error.message)
+				throw error
+			}
 		} finally {
 			setStatus("none")
 		}
@@ -60,7 +62,7 @@ const DocsProvider = ({ children }) => {
 		}
 	}
 
-	const updateDocsList = async (file) => {
+	const updateDocsList = async (file: File) => {
 		const formData = new FormData()
 		formData.append("file", file)
 		const api = UPDATE_DOC_API
@@ -71,7 +73,7 @@ const DocsProvider = ({ children }) => {
 			onSuccess: fetchDocsList,
 		})
 	}
-	const deleteDocsList = async (name) => {
+	const deleteDocsList = async (name: string) => {
 		const api = REMOVE_DOC_API
 		const status = await request({
 			url: api,

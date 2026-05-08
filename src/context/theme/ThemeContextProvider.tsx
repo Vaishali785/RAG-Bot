@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { palettes } from "../../constants/data"
 import { applyPalette, getLocalConfig, storeLocalConfig } from "../../lib/helper"
-import type { PaletteOptions } from "../../types/app-types"
+import type { PaletteOptions, Themes } from "../../types/app-types"
 import { ThemeContext } from "./ThemeContext"
+
 export function ThemeContextProvider({ children }) {
-	const defaultTheme = getLocalConfig("theme")
-	const [theme, setTheme] = useState(defaultTheme)
+	const defaultTheme = getLocalConfig("theme") as Themes
+	const [theme, setTheme] = useState<Themes>(defaultTheme)
 
 	const toggleTheme = () => {
 		const updatedTheme = theme == "light" ? "dark" : "light"

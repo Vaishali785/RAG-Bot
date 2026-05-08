@@ -33,7 +33,7 @@ const KnowledgeTab = () => {
 		handleFileUpload(e.dataTransfer.files)
 	}
 
-	const statusIcon = (status) => {
+	const statusIcon = (status: Status) => {
 		switch (status) {
 			case "loading":
 				return {

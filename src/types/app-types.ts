@@ -36,7 +36,41 @@ export type Msg = {
 	content: string
 	status?: "loading" | "streaming" | "error" | "done"
 	errorMsg?: string
-	type?: "greeting" | "chat"
+	type?: "greeting" | "message"
 }
 
 export type Status = "none" | "loading" | "success" | "fail"
+
+export type SendMsgProps = {
+	query: string
+	type?: "greeting" | "message"
+	status?: "loading" | "streaming" | "error" | "done"
+}
+
+export type MsgAction =
+	| {
+			type: "ADD_USER_MSG"
+			payload: Msg
+	  }
+	| {
+			type: "START_AI_MSG"
+			payload: Msg
+	  }
+	| {
+			type: "UPDATE_AI_MSG"
+			id: string
+			chunk: string
+	  }
+	| {
+			type: "FINISH_AI_MSG"
+			id: string
+			msg: Msg
+	  }
+	| {
+			type: "ERROR_AI_MSG"
+			id: string
+			errorMsg: string
+	  }
+	| {
+			type: "CLEAR_MSGS"
+	  }
