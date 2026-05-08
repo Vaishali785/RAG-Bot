@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 /* ─────────────────────────────
    THEME TOKENS (Tailwind v4)
 ──────────────────────────── */
@@ -45,20 +44,22 @@
 	--color-sidebar-ring: hsl(var(--sidebar-ring));
 
 	/* GRADIENTS */
-	--gradient-page: var(--gradient-page);
+	/* --gradient-page: var(--gradient-page);
 	--gradient-orb-1: var(--gradient-orb-1);
 	--gradient-orb-2: var(--gradient-orb-2);
 	--gradient-orb-3: var(--gradient-orb-3);
 	--gradient-orb-core: var(--gradient-orb-core);
 	--gradient-orb-swirl: var(--gradient-orb-swirl);
 	--gradient-button: var(--gradient-button);
-	--gradient-user: var(--gradient-bubble-user);
+	--gradient-user: var(--gradient-bubble-user); */
 
 	/* SHADOWS */
-	--shadow-soft: var(--shadow-soft);
+	/* --shadow-soft: var(--shadow-soft);
 	--shadow-glow: var(--shadow-glow);
-	--shadow-header: var(--shadow-header);
+	--shadow-header: var(--shadow-header); */
 
+	--shadow-header: var(--shadow-header);
+	--shadow-glow-color: var(--shadow-glow-color);
 	/* Restore Tailwind v3 spacing scale */
 	--spacing-0: 0px;
 	--spacing-px: 1px;
@@ -131,6 +132,7 @@
 	--ring: 262 75% 62%;
 
 	--radius: 1rem;
+	--shadow-glow-color: hsl(265deg 48.39% 48.63% / 58.82%);
 
 	/* GRADIENTS */
 	--gradient-page: linear-gradient(
@@ -169,9 +171,14 @@
 	--glass-bg: hsl(0 0% 100% / 0.6);
 	--glass-border: hsl(0 0% 100% / 0.7);
 
+	/* ERROR GLASS + SHADOWS */
+	--glass-error-bg: hsl(0deg 93.33% 94.12% / 75%);
+	--glass-error-border: hsl(0deg 90.6% 70.78% / 30%);
+	--glass-error-text: hsl(0, 91%, 71%);
+
 	--shadow-soft: 0 8px 32px -8px hsl(262 60% 50% / 0.18);
-	--shadow-glow: 0 20px 60px -12px hsl(270 80% 60% / 0.4);
-	--shadow-header: 0px 0px 50px -5px #7240b896;
+	--shadow-glow: 0 20px 60px -12px hsl(var(--shadow-glow-color)/35%);
+	--shadow-header: 0px 0px 50px -5px hsl(var(--shadow-glow-color)/30%);
 
 	/* SIDEBAR */
 	--sidebar-background: 0 0% 98%;
@@ -182,6 +189,13 @@
 	--sidebar-accent-foreground: 240 5.9% 10%;
 	--sidebar-border: 220 13% 91%;
 	--sidebar-ring: 217.2 91.2% 59.8%;
+
+	/* ERROR */
+	--zone-error-bg: rgba(239, 68, 68, 0.05);
+	--zone-error-icon: rgb(248, 113, 113);
+	--zone-error-icon-bg: #fff;
+	--zone-error-border: rgba(239, 68, 68, 0.25);
+	--zone-error-icon-shadow: 0 2px 12px rgba(239, 68, 68, 0.1);
 }
 
 /* ─────────────────────────────
@@ -215,6 +229,7 @@
 	--border: 230 15% 18%;
 	--input: 230 15% 16%;
 	--ring: 250 70% 68%;
+	--shadow-glow-color: hsl(265deg 48.39% 48.63% / 58.82%);
 
 	/* DARK GRADIENTS */
 	--gradient-page: linear-gradient(
@@ -243,17 +258,25 @@
 	--glass-bg: hsl(230 20% 11% / 0.7);
 	--glass-border: hsl(230 20% 40% / 0.18);
 
-	--shadow-soft: 0 8px 32px -8px hsl(230 50% 2% / 0.6);
+	/* --shadow-soft: 0 8px 32px -8px hsl(230 50% 2% / 0.6);
 	--shadow-glow: 0 20px 60px -12px hsl(250 70% 30% / 0.5);
-	--shadow-header: 0px 0px 50px -5px #7240b896;
+	*/
+	--shadow-header: 0px 0px 50px -5px hsl(var(--shadow-glow-color)/30%);
+
+	/* ERROR */
+	--zone-error-bg: rgba(239, 68, 68, 0.05);
+	--zone-error-icon: rgb(248, 113, 113);
+	--zone-error-icon-bg: rgba(255, 255, 255, 0.05);
+	--zone-error-border: rgba(239, 68, 68, 0.25);
+	--zone-error-icon-shadow: 0 2px 16px rgba(239, 68, 68, 0.08);
 }
 
 /* ─────────────────────────────
    BASE
 ──────────────────────────── */
-* {
-	border-color: var(--color-border);
-}
+/* * {
+	/* border-color: var(--color-border); */
+/* } */
 
 body {
 	color: var(--color-foreground);
@@ -270,6 +293,25 @@ body {
 	background: var(--glass-bg);
 	backdrop-filter: blur(24px) saturate(180%);
 	border: 1px solid var(--glass-border);
+}
+.glass-error {
+	background: var(--glass-bg);
+	backdrop-filter: blur(24px) saturate(180%);
+	/* border: 1px solid var(--glass-error-border); */
+	color: var(--glass-error-text);
+	border-left: 2px solid var(--glass-error-text);
+}
+
+.zone-error {
+	border: 1.5px dashed var(--zone-error-border);
+	background: var(--zone-error-bg);
+}
+
+.zone-error > .error-icon {
+	border: 1px solid var(--zone-error-border);
+	box-shadow: var(--zone-error-icon-shadow);
+	background: var(--zone-error-icon-bg);
+	color: var(--zone-error-icon);
 }
 
 .shadow-soft {
@@ -340,4 +382,9 @@ body {
 
 .animate-typing {
 	animation: typing 1.4s ease-in-out infinite;
+}
+
+.greet ul {
+	list-style: auto;
+	list-style-position: inside;
 }
