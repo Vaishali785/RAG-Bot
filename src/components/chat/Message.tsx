@@ -1,4 +1,5 @@
-import { Sparkles } from "lucide-react"
+import { CircleAlert, Sparkles } from "lucide-react"
+import Markdown from "react-markdown"
 import { cn } from "../../lib/utils"
 import Typing from "./Typing"
 
@@ -16,6 +17,19 @@ export const UserMessage = ({ msg }) => {
 	)
 }
 
+export const Greetings = ({ msg }) => {
+	return (
+		<div
+			className={cn(
+				"greet flex flex-col gap-2  max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft rounded-2xl  rounded-tl-md",
+				msg.status === "error" ? "glass-error" : "glass",
+			)}
+		>
+			<Markdown>{msg.content}</Markdown>
+		</div>
+	)
+}
+
 export const AIMessage = ({ msg }) => {
 	return (
 		<div key={msg.id} className={cn("flex gap-3 animate-message-in my-3 justify-start")}>
@@ -24,13 +38,21 @@ export const AIMessage = ({ msg }) => {
 			</div>
 			{msg.status === "loading" ? (
 				<Typing />
+			) : msg.type === "greeting" ? (
+				<Greetings msg={msg} />
 			) : (
 				<div
 					className={cn(
-						"max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft glass rounded-2xl  rounded-bl-md",
+						"flex gap-2 items-center max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft rounded-2xl  rounded-tl-md",
+						msg.status === "error" ? "glass-error" : "glass",
 					)}
 				>
-					{msg.status === "error" ? msg.errorMsg : msg.content}
+					{msg.status === "error" && <CircleAlert className="w-3.5 h-3.5" />}
+					{msg.status === "error" ? (
+						<Markdown>{msg.errorMsg}</Markdown>
+					) : (
+						<Markdown>{msg.content}</Markdown>
+					)}
 				</div>
 			)}
 		</div>
