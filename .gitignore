@@ -24,6 +24,13 @@ dist-ssr
 *.sw?
 __pycache__/
 
-*.env/
+*.env
 .venv/
 .cursor/
+*.chroma_langchain_db/
+*.chroma_langchain_db_nomic/
+*chroma_langchain_db/
+
+
+*docs/
+*uploads/
