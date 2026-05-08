@@ -14,7 +14,12 @@ const DocumentList = () => {
 		fetchDocsList()
 	}, [])
 
-	if (status == "loading") return <Loader />
+	if (status == "loading")
+		return (
+			<div className="mt-6 space-y-2">
+				<Loader className={"w-10 h-10"} />
+			</div>
+		)
 
 	if (error)
 		return (
