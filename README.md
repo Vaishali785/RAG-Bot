@@ -136,9 +136,8 @@ The chat is automatically cleared when:
 ## Frontend
 
 ```bash
-    cd frontend
-    npm install
-    npm run dev
+    pnpm install
+    pnpm run dev
 ```
 
 ---
@@ -155,6 +154,12 @@ The chat is automatically cleared when:
 
 # Environment Variables
 
+## Frontend
+
+```env
+    VITE_API_URL=http://localhost:8000
+```
+
 ## Backend
 
 ```env
@@ -168,7 +173,7 @@ The chat is automatically cleared when:
 
 ## Upload Document
 
-```http id="8yjlwm"
+```http
 POST /upload
 ```
 
@@ -176,7 +181,7 @@ POST /upload
 
 ## Get Documents
 
-```http id="4zjlwm"
+```http
 GET /docs-list
 ```
 
@@ -184,7 +189,7 @@ GET /docs-list
 
 ## Delete Document
 
-```http id="2a0k2w"
+```http
 POST /remove-doc
 ```
 
@@ -192,7 +197,7 @@ POST /remove-doc
 
 ## Chat
 
-```http id="s9k3zm"
+```http
 POST /chat
 ```
 
@@ -226,10 +231,6 @@ This project explores:
 - separation of concerns
 
 ---
-
-# License
-
-MIT License
 
 <!-- Things to Do -->
 
