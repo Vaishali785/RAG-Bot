@@ -45,7 +45,7 @@ const ServerLoadingScreen = ({ serverReady }: Props) => {
 	const showDelayMsg = progress >= 95 && progress < 100
 
 	return (
-		<div className="flex h-full items-center justify-center bg-background px-6">
+		<div className="flex h-full items-center justify-center bg-backgroun px-6">
 			<div className="glass flex w-full max-w-md flex-col gap-6 rounded-3xl p-8 shadow-glow">
 				<div className="flex flex-col gap-2">
 					<h1 className="text-2xl font-semibold">Aria is waking up</h1>
