@@ -1,49 +1,57 @@
 import { useEffect, useState } from "react"
 
-const loadingSteps = [
-	"Starting AI server...",
-	"Loading models...",
-	"Preparing documents...",
-	"Connecting knowledge base...",
-	"Almost ready...",
-]
-
-type Props = {
-	progress: number
-	setProgress: React.Dispatch<React.SetStateAction<number>>
+const loadingFlow = {
+	steps: [
+		"Starting AI server...",
+		"Loading models...",
+		"Preparing documents...",
+		"Connecting knowledge base...",
+		"Almost ready...",
+	],
+	delay: {
+		message: "Server is taking longer than expected...",
+	},
 }
 
-const ServerLoadingScreen = ({ progress, setProgress }: Props) => {
-	const [stepIndex, setStepIndex] = useState(0)
+type Props = {
+	serverReady: boolean
+}
 
+const ServerLoadingScreen = ({ serverReady }: Props) => {
+	const [stepIndex, setStepIndex] = useState(0)
+	const [progress, setProgress] = useState(0)
+	const displayProgress = serverReady ? 100 : progress
+
+	// Progress effect
 	useEffect(() => {
+		if (serverReady) return
+
 		const interval = setInterval(() => {
 			setProgress((prev) => {
 				if (prev >= 95) {
-					clearInterval(interval)
 					return 95
 				}
-
 				return Math.min(prev + Math.random() * 12, 95)
-			})
-		}, 1200)
-
-		return () => clearInterval(interval)
-	}, [])
-
-	useEffect(() => {
-		const stepTimer = setInterval(() => {
-			setStepIndex((prev) => {
-				if (prev >= loadingSteps.length - 1) {
-					return prev
-				}
-
-				return prev + 1
 			})
 		}, 4000)
 
+		return () => clearInterval(interval)
+	}, [serverReady])
+
+	// Step animation
+	useEffect(() => {
+		if (serverReady) return
+		const stepTimer = setInterval(() => {
+			setStepIndex((prev) => (prev >= loadingFlow.steps.length - 1 ? prev : prev + 1))
+		}, 7000)
+
 		return () => clearInterval(stepTimer)
-	}, [])
+	}, [serverReady])
+
+	// ----------------------------
+	// Derived UI state (NO useEffect needed)
+	// ----------------------------
+	const showDelayMsg = progress >= 95 && progress < 100
 
 	return (
 		<div className="flex h-full items-center justify-center bg-background px-6">
@@ -67,9 +75,9 @@ const ServerLoadingScreen = ({ progress, setProgress }: Props) => {
 					</div>
 
 					<div className="flex items-center justify-between text-sm">
-						<span>{loadingSteps[stepIndex]}</span>
+						<span>{showDelayMsg ? loadingFlow.delay.message : loadingFlow.steps[stepIndex]}</span>
 
-						<span>{Math.floor(progress)}%</span>
+						<span>{Math.floor(displayProgress)}%</span>
 					</div>
 				</div>
 

@@ -12,7 +12,6 @@ const HomePage = () => {
 	const { sendMsg, msgs, initGreeting } = useChat()
 	const { docsList, status } = useDocs()
 	const [serverReady, setServerReady] = useState(false)
-	const [progress, setProgress] = useState(0)
 
 	useEffect(() => {
 		if (docsList.length > 0 && msgs.length === 0) {
@@ -26,7 +25,7 @@ const HomePage = () => {
 			const res = await fetch(`${SERVER_STARTED}`)
 
 			if (res.ok) {
-				setProgress(100)
+				// setProgress(100)
 
 				setTimeout(() => {
 					setServerReady(true)
@@ -47,7 +46,7 @@ const HomePage = () => {
 	}, [])
 
 	if (!serverReady) {
-		return <ServerLoadingScreen progress={progress} setProgress={setProgress} />
+		return <ServerLoadingScreen serverReady={serverReady} />
 	}
 	if (status == "loading") return <Loader />
 
