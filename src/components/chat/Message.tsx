@@ -9,7 +9,7 @@ export const UserMessage = ({ msg }: { msg: Msg }) => {
 		<div key={msg.id} className={cn("flex gap-3 animate-message-in my-3 justify-end")}>
 			<div
 				className={cn(
-					"max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft bg-gradient-user text-white rounded-2xl rounded-br-md",
+					"max-w-[90%] lg:max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft bg-gradient-user text-white rounded-2xl rounded-br-md",
 				)}
 			>
 				{msg.content}
@@ -22,7 +22,7 @@ export const Greetings = ({ msg }: { msg: Msg }) => {
 	return (
 		<div
 			className={cn(
-				"greet flex flex-col gap-2  max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft rounded-2xl  rounded-tl-md",
+				"greet flex flex-col gap-2  max-w-[90%] lg:max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft rounded-2xl  rounded-tl-md",
 				msg.status === "error" ? "glass-error" : "glass",
 			)}
 		>
@@ -44,7 +44,7 @@ export const AIMessage = ({ msg }: { msg: Msg }) => {
 			) : (
 				<div
 					className={cn(
-						"flex gap-2 items-center max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft rounded-2xl  rounded-tl-md",
+						"flex gap-2 items-center max-w-[90%] lg:max-w-[75%] px-4 py-3 text-sm leading-relaxed shadow-soft rounded-2xl  rounded-tl-md",
 						msg.status === "error" ? "glass-error" : "glass",
 					)}
 				>

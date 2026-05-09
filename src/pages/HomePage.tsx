@@ -11,7 +11,9 @@ import useChat from "../hooks/useChat"
 const HomePage = () => {
 	const { sendMsg, msgs, initGreeting } = useChat()
 	const { docsList, status } = useDocs()
-	const [serverReady, setServerReady] = useState(false)
+	const [serverReady, setServerReady] = useState(() => {
+		return sessionStorage.getItem("server-ready") === "true"
+	})
 
 	useEffect(() => {
 		if (docsList.length > 0 && msgs.length === 0) {
@@ -26,6 +28,7 @@ const HomePage = () => {
 
 			if (res.ok) {
 				// setProgress(100)
+				sessionStorage.setItem("server-ready", "true")
 
 				setTimeout(() => {
 					setServerReady(true)
@@ -37,6 +40,7 @@ const HomePage = () => {
 			setTimeout(wakeServer, 3000)
 		} catch (err) {
 			console.log("err", err)
+			sessionStorage.removeItem("server-ready")
 			setTimeout(wakeServer, 3000)
 		}
 	}
@@ -45,10 +49,11 @@ const HomePage = () => {
 		wakeServer()
 	}, [])
 
+	if (status == "loading" && serverReady) return <Loader />
+
 	if (!serverReady) {
 		return <ServerLoadingScreen serverReady={serverReady} />
 	}
-	if (status == "loading") return <Loader />
 
 	if (docsList.length === 0)
 		return (

@@ -14,7 +14,7 @@ const ChatWindow = ({ messages }: Props) => {
 	}, [messages])
 	return (
 		<div ref={scrollRef} className="overflow-y-scroll w-full h-full">
-			<div className="h-full w-3xl flex-1 z-2 p-8 pb-2 mx-auto">
+			<div className="h-full md:w-3xl lg:w-6xl max-sm:mx-0 max-md:p-4 max-md:mx-10 max-md:w-auto flex-1 z-2 md:p-8 pb-2 ">
 				{messages?.map((msg) =>
 					msg.sender === "user" ? (
 						<UserMessage msg={msg} key={msg.id} />

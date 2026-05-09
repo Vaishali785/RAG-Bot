@@ -57,7 +57,7 @@ const Input = ({ sendMsg, lastMsg }: Props) => {
 					<SendBtn send={handleSubmit} input={input} aiMsgLoading={aiMsgLoading} />
 				</div>
 			</div>
-			<p className="text-center text-[11px] text-muted-foreground mt-3 absolute left-1/2 bottom-5 -translate-x-1/2">
+			<p className="text-center text-[11px] text-muted-foreground mt-3 absolute left-1/2 bottom-5 -translate-x-1/2 w-full">
 				AI can make mistakes. Verify important info with our team.
 			</p>
 		</div>

@@ -18,9 +18,10 @@ type Props = {
 }
 
 const ServerLoadingScreen = ({ serverReady }: Props) => {
-	const [stepIndex, setStepIndex] = useState(0)
 	const [progress, setProgress] = useState(0)
 	const displayProgress = serverReady ? 100 : progress
+	const stepIndex =
+		progress < 20 ? 0 : progress < 40 ? 1 : progress < 50 ? 2 : progress < 70 ? 3 : 4
 
 	// Progress effect
 	useEffect(() => {
@@ -33,19 +34,9 @@ const ServerLoadingScreen = ({ serverReady }: Props) => {
 				}
 				return Math.min(prev + Math.random() * 12, 95)
 			})
-		}, 4000)
+		}, 4500)
 
 		return () => clearInterval(interval)
-	}, [serverReady])
-
-	// Step animation
-	useEffect(() => {
-		if (serverReady) return
-		const stepTimer = setInterval(() => {
-			setStepIndex((prev) => (prev >= loadingFlow.steps.length - 1 ? prev : prev + 1))
-		}, 7000)
-
-		return () => clearInterval(stepTimer)
 	}, [serverReady])
 
 	// ----------------------------
