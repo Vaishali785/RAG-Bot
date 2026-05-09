@@ -1,14 +1,18 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import KnowledgeTab from "../components/admin/KnowledgeTab"
 import ChatWindow from "../components/chat/ChatWindow"
 import Input from "../components/chat/Input"
 import Loader from "../components/Loader"
+import ServerLoadingScreen from "../components/ServerLoadingScreen"
+import { SERVER_STARTED } from "../constants/queries"
 import { useDocs } from "../context/docs/DocsProvider"
 import useChat from "../hooks/useChat"
 
 const HomePage = () => {
 	const { sendMsg, msgs, initGreeting } = useChat()
 	const { docsList, status } = useDocs()
+	const [serverReady, setServerReady] = useState(false)
+	const [progress, setProgress] = useState(0)
 
 	useEffect(() => {
 		if (docsList.length > 0 && msgs.length === 0) {
@@ -16,6 +20,35 @@ const HomePage = () => {
 		}
 	}, [docsList])
 
+	// If server is not active
+	const wakeServer = async () => {
+		try {
+			const res = await fetch(`${SERVER_STARTED}`)
+
+			if (res.ok) {
+				setProgress(100)
+
+				setTimeout(() => {
+					setServerReady(true)
+				}, 300)
+
+				return
+			}
+
+			setTimeout(wakeServer, 3000)
+		} catch (err) {
+			console.log("err", err)
+			setTimeout(wakeServer, 3000)
+		}
+	}
+
+	useEffect(() => {
+		wakeServer()
+	}, [])
+
+	if (!serverReady) {
+		return <ServerLoadingScreen progress={progress} setProgress={setProgress} />
+	}
 	if (status == "loading") return <Loader />
 
 	if (docsList.length === 0)
@@ -34,7 +67,8 @@ const HomePage = () => {
 
 				<p className="glass rounded-3xl p-6 shadow-soft my-4">
 					<strong>👋 How it works — </strong>
-					upload a .pdf file above and I'll read through it. Then just ask me anything and I'll answer based on exactly what's in your document.
+					upload a .pdf file above and I'll read through it. Then just ask me anything and I'll
+					answer based on exactly what's in your document.
 				</p>
 			</div>
 		)
