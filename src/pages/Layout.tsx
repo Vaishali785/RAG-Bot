@@ -9,26 +9,26 @@ const Layout = () => {
 			{pathname === "/admin" ? (
 				<div className="pointer-events-none absolute inset-0 overflow-hidden">
 					<div
-						className="absolute -top-40 -right-32 w-[500px] h-[500px] rounded-full opacity-40 blur-3xl animate-float-slow"
+						className="absolute -top-40 -right-32 w-[500px] h-[500px] rounded-full opacity-40 blur-3xl animate-float-slow -z-50"
 						style={{ background: "var(--gradient-orb-1)" }}
 					/>
 					<div
-						className="absolute -bottom-40 -left-32 w-[450px] h-[450px] rounded-full opacity-30 blur-3xl animate-float-slower"
+						className="absolute -bottom-40 -left-32 w-[450px] h-[450px] rounded-full opacity-30 blur-3xl animate-float-slower -z-50"
 						style={{ background: "var(--gradient-orb-3)" }}
 					/>
 				</div>
 			) : (
 				<div className="pointer-events-none absolute inset-0 overflow-hidden">
 					<div
-						className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full opacity-30 blur-3xl animate-float-slow"
+						className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full opacity-30 blur-3xl animate-float-slow -z-50"
 						style={{ background: "var(--gradient-orb-1)" }}
 					/>
 					<div
-						className="absolute top-[16%] -right-32 w-[450px] h-[450px] rounded-full opacity-40 blur-3xl animate-float-slower"
+						className="absolute top-[16%] -right-32 w-[450px] h-[450px] rounded-full opacity-40 blur-3xl animate-float-slower -z-50"
 						style={{ background: "var(--gradient-orb-2)" }}
 					/>
 					<div
-						className="absolute -bottom-40 left-[18%] w-[500px] h-[500px] rounded-full opacity-30 blur-3xl animate-float-slow"
+						className="absolute -bottom-40 left-[18%] w-[500px] h-[500px] rounded-full opacity-30 blur-3xl animate-float-slow -z-50"
 						style={{ background: "var(--gradient-orb-3)" }}
 					/>
 				</div>
