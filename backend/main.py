@@ -17,6 +17,10 @@ app.add_middleware(
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+@app.get('/health')
+async def health():
+    return {"status": "ok"}
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
