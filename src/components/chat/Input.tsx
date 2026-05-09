@@ -30,7 +30,6 @@ const Input = ({ sendMsg, lastMsg }: Props) => {
 
 	useEffect(() => {
 		if (!inputRef.current) return
-
 		inputRef.current.style.height = "36px"
 		if (input.trim()) {
 			// Reset height to 'auto' to correctly calculate scrollHeight when shrinking
@@ -41,7 +40,7 @@ const Input = ({ sendMsg, lastMsg }: Props) => {
 	return (
 		<div className="relative w-full ">
 			<div className="flex justify-center w-full items-end p-2 mb-10">
-				<div className={`w-3xl flex glass rounded-3xl pl-5 pr-2 py-2 shadow-soft `}>
+				<div className={`w-3xl flex glass rounded-3xl pl-5 pr-2 py-2 shadow-soft sm:max-md:mx-7`}>
 					<textarea
 						rows={1}
 						ref={inputRef}
