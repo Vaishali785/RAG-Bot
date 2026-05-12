@@ -1,5 +1,6 @@
-import { useEffect, useReducer, useRef } from "react"
+import { useEffect, useReducer, useRef, useState } from "react"
 import { CHAT_API } from "../constants/queries"
+import { getSessionId } from "../lib/helper"
 import type { Msg, MsgAction, SendMsgProps } from "../types/app-types"
 
 function msgReducer(msgs: Msg[], action: MsgAction): Msg[] {
@@ -47,8 +48,11 @@ const getInitialMsgs = () => {
 	}
 }
 
+const sessionId = getSessionId()
+
 const useChat = () => {
 	const [msgs, dispatch] = useReducer(msgReducer, [], getInitialMsgs)
+	const [abortController, setAbortController] = useState<AbortController | null>(null)
 	const hasInitialized = useRef(false)
 
 	useEffect(() => {
@@ -56,13 +60,21 @@ const useChat = () => {
 	}, [msgs])
 
 	const streamResponse = async (query: string, msgId: string, filteredMsgs: Msg[]) => {
+		const controller = new AbortController()
+		setAbortController(controller)
+
+		// auto-abort after 35 seconds (slightly more than backend timeout)
+		const timeout = setTimeout(() => controller.abort(), 35000)
+
 		try {
 			const response = await fetch(CHAT_API, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					"user-session-id": sessionId,
 				},
 				body: JSON.stringify({ question: query, msgs: filteredMsgs }),
+				signal: controller.signal, // ties fetch to abort controller
 			})
 			const msg = await response.json()
 			// const reader = response.body.getReader()
@@ -83,6 +95,7 @@ const useChat = () => {
 			// 	})
 			// }
 
+			console.log(">>>ai", msg)
 			dispatch({
 				type: "FINISH_AI_MSG",
 				id: msgId,
@@ -91,6 +104,10 @@ const useChat = () => {
 		} catch (error) {
 			if (error instanceof Error) {
 				console.log("error", error)
+				if (error instanceof Error && error.name === "AbortError") {
+					dispatch({ type: "ERROR_AI_MSG", id: msgId, errorMsg: "Request cancelled." })
+					return
+				}
 				dispatch({
 					type: "ERROR_AI_MSG",
 					id: msgId,
@@ -98,6 +115,9 @@ const useChat = () => {
 				})
 			}
 			// setError(error.message)
+		} finally {
+			clearTimeout(timeout)
+			setAbortController(null)
 		}
 	}
 
@@ -132,8 +152,14 @@ const useChat = () => {
 			},
 		})
 
-		const filteredMsgs = updatedMsgs.filter((msg) => msg.type !== "greeting")
+		const filteredMsgs = updatedMsgs.filter((msg) => {
+			const isGreeting = msg.type === "greeting"
+			const isEmptyAssistantMsg = msg.sender === "assistant" && msg.content.trim() === ""
 
+			return !isGreeting && !isEmptyAssistantMsg
+		})
+
+		console.log(filteredMsgs)
 		await streamResponse(query, aiMsgId, filteredMsgs)
 	}
 
@@ -155,7 +181,7 @@ const useChat = () => {
 			type: "CLEAR_MSGS",
 		})
 	}
-	return { sendMsg, msgs, initGreeting, clearChat }
+	return { sendMsg, msgs, initGreeting, clearChat, abortController }
 }
 
 export default useChat
