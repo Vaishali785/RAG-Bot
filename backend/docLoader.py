@@ -17,18 +17,16 @@ from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 from langchain_nomic import NomicEmbeddings
 
-
 nomic_embeddings = NomicEmbeddings(model="nomic-embed-text-v1.5")
-def vectorDBNomic(companyName="test"):
+def vectorDBNomic(user_session_id):
     vector_store = Chroma(
-        collection_name=companyName,
+        collection_name=f"user_{user_session_id}",
         embedding_function=nomic_embeddings,
         persist_directory="./.chroma_langchain_db_nomic"
     )
     return vector_store
 
-
-async def fileLoader(file): 
+async def fileLoader(file, user_session_id): 
     start = time.time()
     original_name = file.filename
     
@@ -55,40 +53,67 @@ async def fileLoader(file):
     all_splits = text_splitter.split_documents(docs)
 
     # call embeddings function
-    vector_store = vectorDBNomic("test")
+    vector_store = vectorDBNomic(user_session_id)
     vector_store.add_documents(documents=all_splits)
         
     
 
+def make_retrieve_context_tool(user_session_id: str):
+    @tool
+    def retrieve_context(user_query: str)-> str:
+        """Retrieve relevant chunks from the uploaded doc to help answer the user query.
+        
+        Args: 
+            user_query: User's question related to the uploaded document
+        """
+        vector_store = vectorDBNomic(user_session_id)
+        user_query_embedding = nomic_embeddings.embed_query(user_query)
+        retrieved_docs = vector_store.similarity_search_by_vector(user_query_embedding, k=2)
+        serialized = "\n\n".join(
+            (f"Source: {doc.metadata} \nContent: {doc.page_content}")
+            for doc in retrieved_docs
+        )
+        return serialized or "No relevant documents found."
+        
+    return retrieve_context
 
-@tool(response_format="content_and_artifact")
-def retrieve_context(user_query):
-    """Retrieve relevant chunks from the uploaded doc to help answer the user query.
+def make_list_docs_tool(user_session_id: str):
+    @tool
+    def list_docs_tool() -> str:
+        """Returns the list of documents available in the vector DB for the current user."""
+        docs = list_docs(user_session_id)
+        if not docs:
+            return "No documents found."
+        # ✅ must return string, not list
+        return "\n".join(
+            f"- {doc['name']} (pages: {doc['pages']}, uploaded: {doc['uploadDate']})"
+            for doc in docs
+        )
     
-    Args: 
-        user_query: User's question related to the uploaded document
-    """
-    vector_store = vectorDBNomic()
-    user_query_embedding = nomic_embeddings.embed_query(user_query)
-    retrieved_docs = vector_store.similarity_search_by_vector(user_query_embedding)
-    serialized = "\n\n".join(
-        (f"Source: {doc.metadata} \nContent: {doc.page_content}")
-        for doc in retrieved_docs
+    return list_docs_tool
+
+model = ChatGroq(
+        model="openai/gpt-oss-20b",
+        temperature=0,
+        max_retries=2,
+        
     )
-    return serialized, retrieved_docs
 
+def agentCall(user_query, msgs,user_session_id):
+    # docs = list_docs(user_session_id)
+    # doc_list = "\n".join([f"- {doc['name']}" for doc in docs])
+    retrieve_tool = make_retrieve_context_tool(
+        user_session_id
+    )
+    list_tool = make_list_docs_tool(user_session_id)
 
-
-
-def agentCall(user_query, msgs):
-    docs = list_docs()
-    doc_list = "\n".join([f"- {doc['name']}" for doc in docs])
+    
     if(user_query == "greetings"):
         # docs = list_docs()
         prompt= f"""
             Your name is Aria, you are an assistant for question-answering tasks. Greet the user by just giving a short intro of yourself saying:
                 Hi! 👋 I'm your AI assistant. I can help answer questions based on the following documents:
-                {doc_list} 
+                    ** Call tool to get the doc list and give only doc name to user  **
                 Ask me anything!
             Format all responses using clean Markdown:
                 - Use bullet points for lists
@@ -114,21 +139,16 @@ def agentCall(user_query, msgs):
 
     llmMsgs = []
     for msg in msgs:
+        content = msg.get("content", "")
         llmMsg = {
             "role" : msg['sender'],
-            "content" : msg['content']
+            "content" : content
         }
         llmMsgs.append(llmMsg)
-
-    model = ChatGroq(
-        model="openai/gpt-oss-20b",
-        temperature=0,
-        max_retries=2,
-        
-    )
+    
     agent = create_agent(
         model,
-        tools=[retrieve_context, list_docs],
+        tools=[retrieve_tool, list_tool],
         system_prompt=prompt,
     )
 
@@ -140,8 +160,8 @@ def agentCall(user_query, msgs):
     
 
 
-def removeDocs(source=''):
-    collection = vectorDBNomic("test")
+def removeDocs(user_session_id , source=''):
+    collection = vectorDBNomic(user_session_id)
     if source != '':
         collection.delete(where={"source": source} )
         return "success"
@@ -149,10 +169,10 @@ def removeDocs(source=''):
         return "fail"
     # list_docs()
 
-def list_docs():
+def list_docs(user_session_id):
     """Returns document list available and chunked in vector DB."""
 
-    collection = vectorDBNomic("test") 
+    collection = vectorDBNomic(user_session_id) 
     metadatas = collection._collection.get(include=["metadatas"])
     docs=[]
     docNames = []
