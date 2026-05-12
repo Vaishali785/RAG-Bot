@@ -1,13 +1,16 @@
+import { Square } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { cn } from "../../lib/utils"
 import type { Msg, SendMsgProps } from "../../types/app-types"
 import SendBtn from "./SendBtn"
 
 type Props = {
 	sendMsg: (data: SendMsgProps) => Promise<void>
 	lastMsg?: Msg // when msgs=[], lastMsg = undefined
+	abortController?: AbortController
 }
 
-const Input = ({ sendMsg, lastMsg }: Props) => {
+const Input = ({ sendMsg, lastMsg, abortController }: Props) => {
 	const [input, setInput] = useState(" ")
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -52,8 +55,19 @@ const Input = ({ sendMsg, lastMsg }: Props) => {
 						autoFocus
 						placeholder="Type your question here.."
 					/>
-
-					<SendBtn send={handleSubmit} input={input} aiMsgLoading={aiMsgLoading} />
+					{abortController ? (
+						<button
+							onClick={() => abortController.abort()}
+							className={cn(
+								"w-9 h-9 rounded-full bg-gradient-button self-end flex items-center justify-center text-white transition-all",
+								"hover:scale-105 active:scale-95 shadow-soft cursor-pointer",
+							)}
+						>
+							<Square fill="#fff" className="w-4 h-4" />
+						</button>
+					) : (
+						<SendBtn send={handleSubmit} input={input} aiMsgLoading={aiMsgLoading} />
+					)}
 				</div>
 			</div>
 			<p className="text-center text-[11px] text-muted-foreground mt-3 absolute left-1/2 bottom-5 -translate-x-1/2 w-full">

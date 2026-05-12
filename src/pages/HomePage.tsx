@@ -9,7 +9,7 @@ import { useDocs } from "../context/docs/DocsProvider"
 import useChat from "../hooks/useChat"
 
 const HomePage = () => {
-	const { sendMsg, msgs, initGreeting } = useChat()
+	const { sendMsg, msgs, initGreeting, abortController } = useChat()
 	const { docsList, status } = useDocs()
 	const [serverReady, setServerReady] = useState(() => {
 		return sessionStorage.getItem("server-ready") === "true"
@@ -79,7 +79,7 @@ const HomePage = () => {
 	return (
 		<>
 			<ChatWindow messages={msgs} />
-			<Input sendMsg={sendMsg} lastMsg={msgs.at(-1)} />
+			<Input sendMsg={sendMsg} lastMsg={msgs.at(-1)} abortController={abortController} />
 		</>
 	)
 }
