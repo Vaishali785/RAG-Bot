@@ -31,3 +31,16 @@ export const applyPalette = (p: Palette, theme?: "light" | "dark") => {
 	r.style.setProperty("--gradient-orb-core", v.orbCore)
 	r.style.setProperty("--shadow-glow-color", v.primary)
 }
+
+export const getSessionId = () => {
+	const SESSION_KEY = "user-session-id"
+	let sessionId = sessionStorage.getItem(SESSION_KEY)
+
+	if (!sessionId) {
+		sessionId = crypto.randomUUID()
+
+		sessionStorage.setItem(SESSION_KEY, sessionId)
+	}
+
+	return sessionId
+}

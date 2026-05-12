@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { DOCS_API, REMOVE_DOC_API, UPDATE_DOC_API } from "../../constants/queries"
 import useChat from "../../hooks/useChat"
+import { getSessionId } from "../../lib/helper"
 import type { Doc, Status } from "../../types/app-types"
 import { DocsContext } from "./DocsContext"
 
@@ -11,6 +12,8 @@ type RequestProps<T> = {
 	headers?: HeadersInit
 	onSuccess?: (data: T) => void
 }
+
+const sessionId = getSessionId()
 
 const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 	const [docsList, setDocsList] = useState<Doc[]>([])
@@ -56,7 +59,14 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 	const fetchDocsList = async () => {
 		const api = DOCS_API
 		try {
-			await request({ url: api, method: "GET", onSuccess: setDocsList })
+			await request({
+				url: api,
+				headers: {
+					"user-session-id": sessionId,
+				},
+				method: "GET",
+				onSuccess: setDocsList,
+			})
 		} catch (err) {
 			console.log("err", err)
 		}
@@ -69,6 +79,9 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 		await request({
 			url: api,
 			method: "POST",
+			headers: {
+				"user-session-id": sessionId,
+			},
 			body: formData,
 			onSuccess: fetchDocsList,
 		})
@@ -78,6 +91,9 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 		const status = await request({
 			url: api,
 			method: "POST",
+			headers: {
+				"user-session-id": sessionId,
+			},
 			body: JSON.stringify({ data: name }),
 			onSuccess: fetchDocsList,
 		})
