@@ -7,7 +7,7 @@ import SendBtn from "./SendBtn"
 type Props = {
 	sendMsg: (data: SendMsgProps) => Promise<void>
 	lastMsg?: Msg // when msgs=[], lastMsg = undefined
-	abortController?: AbortController
+	abortController?: AbortController | null
 }
 
 const Input = ({ sendMsg, lastMsg, abortController }: Props) => {
