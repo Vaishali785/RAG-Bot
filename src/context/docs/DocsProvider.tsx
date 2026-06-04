@@ -50,7 +50,11 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 				setStatus("fail")
 				setError(error.message)
 			}
-			throw error
+
+			console.log("error", error)
+
+			throw new Error(error)
+			// throw error
 		} finally {
 			setStatus("none")
 		}
@@ -92,9 +96,10 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 			url: api,
 			method: "POST",
 			headers: {
+				"Content-Type": "application/json",
 				"user-session-id": sessionId,
 			},
-			body: JSON.stringify({ data: name }),
+			body: JSON.stringify({ source: name }),
 			onSuccess: fetchDocsList,
 		})
 

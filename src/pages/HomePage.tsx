@@ -46,8 +46,10 @@ const HomePage = () => {
 	}
 
 	useEffect(() => {
-		wakeServer()
-	}, [])
+		if (!serverReady) {
+			wakeServer()
+		}
+	}, [serverReady])
 
 	if (status == "loading" && serverReady) return <Loader />
 

@@ -49,11 +49,13 @@ export const AIMessage = ({ msg }: { msg: Msg }) => {
 					)}
 				>
 					{msg.status === "error" && <CircleAlert className="w-3.5 h-3.5" />}
-					{msg.status === "error" ? (
-						<Markdown>{msg.errorMsg}</Markdown>
-					) : (
-						<Markdown>{msg.content}</Markdown>
-					)}
+					<div>
+						{msg.status === "error" ? (
+							<Markdown>{msg.errorMsg}</Markdown>
+						) : (
+							<Markdown>{msg.content}</Markdown>
+						)}
+					</div>
 				</div>
 			)}
 		</div>

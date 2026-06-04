@@ -76,7 +76,8 @@ const useChat = () => {
 				body: JSON.stringify({ question: query, msgs: filteredMsgs }),
 				signal: controller.signal, // ties fetch to abort controller
 			})
-			const msg = await response.json()
+			const data = await response.json()
+			const msg = await data.answer
 			// const reader = response.body.getReader()
 			// const decoder = new TextDecoder()
 
@@ -94,8 +95,6 @@ const useChat = () => {
 			// 		chunk,
 			// 	})
 			// }
-
-			console.log(">>>ai", msg)
 			dispatch({
 				type: "FINISH_AI_MSG",
 				id: msgId,
