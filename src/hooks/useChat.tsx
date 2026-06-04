@@ -158,7 +158,6 @@ const useChat = () => {
 			return !isGreeting && !isEmptyAssistantMsg
 		})
 
-		console.log(filteredMsgs)
 		await streamResponse(query, aiMsgId, filteredMsgs)
 	}
 
