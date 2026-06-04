@@ -46,14 +46,15 @@ const DocsProvider = ({ children }: { children: React.ReactNode }) => {
 			onSuccess?.(data)
 			return data
 		} catch (error) {
-			if (error instanceof Error) {
-				setStatus("fail")
-				setError(error.message)
-			}
+			const errorMessage = error instanceof Error ? error.message : "Something went wrong"
+			// if (error instanceof Error) {
+			setStatus("fail")
+			setError(errorMessage)
+			// }
 
 			console.log("error", error)
 
-			throw new Error(error)
+			throw new Error(errorMessage)
 			// throw error
 		} finally {
 			setStatus("none")
